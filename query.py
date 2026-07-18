@@ -4,6 +4,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).parent
 sys.path.append(str(BASE_DIR))
+sys.path.append(str(BASE_DIR.parent))
 
 try:
     from retriever.search import MultimodalRetriever

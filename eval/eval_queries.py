@@ -1,9 +1,8 @@
 import argparse
 from pathlib import Path
 
-from fashion_retrieval.indexer.config import IndexConfig
-from fashion_retrieval.eval.metrics import evaluate_queries
-from fashion_retrieval.retriever.search import MultimodalRetriever
+from eval.metrics import evaluate_queries
+from retriever.search import MultimodalRetriever
 
 
 ASSIGNMENT_QUERIES = [
@@ -18,7 +17,7 @@ ASSIGNMENT_QUERIES = [
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--top-k", type=int, default=5)
-    parser.add_argument("--device", default=IndexConfig.device)
+    parser.add_argument("--device", default="auto")
     parser.add_argument("--ground-truth", default=None)
     parser.add_argument("--use-itm", action="store_true")
     parser.add_argument("--itm-pool", type=int, default=20)
@@ -29,7 +28,7 @@ def main() -> None:
             ASSIGNMENT_QUERIES,
             Path(args.ground_truth),
             top_k=args.top_k,
-            config=IndexConfig(device=args.device),
+            
         )
         for metric in metrics:
             print(

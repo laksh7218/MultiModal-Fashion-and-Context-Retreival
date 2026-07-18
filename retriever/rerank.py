@@ -5,60 +5,23 @@ from typing import List, Dict
 BASE_DIR = Path(__file__).parent.parent
 METADATA_PATH = BASE_DIR / "data" / "curated_context_metadata.csv"
 
-import re
-from .vocabulary import (
-    COLOR_WORDS,
-    GARMENT_WORDS,
-    SCENE_WORDS,
-    OBJECT_WORDS,
-    STYLE_WORDS,
-    GENDER_MAP,
-    SYNONYMS
-)
+from indexer.attribute_extraction import extract_attributes_from_text
 
 def parse_query_to_attributes(query: str) -> Dict[str, List[str]]:
     """
-    Robust vocabulary-based parser using regex tokenization.
+    Robust parser using the centralized attribute_extraction module.
     """
-    query = query.lower()
+    extracted = extract_attributes_from_text(query)
     
-    # Normalize multi-word synonyms and edge cases BEFORE tokenization
-    for phrase, replacement in SYNONYMS.items():
-        query = query.replace(phrase, replacement)
-        
-    tokens = re.findall(r"\w+", query)
-    
-    attributes = {
-        "garments": [],
-        "colors": [],
-        "scene": [],
-        "objects": [],
-        "styles": [],
-        "gender": [],
-        "color_garment_pairs": []
+    return {
+        "garments": extracted.get("garments", []),
+        "colors": extracted.get("colors", []),
+        "scene": extracted.get("contexts", []),  # Map 'contexts' to 'scene'
+        "objects": extracted.get("objects", []),
+        "styles": extracted.get("styles", []),
+        "gender": [], # Centralized extractor doesn't use gender
+        "color_garment_pairs": extracted.get("color_garment_pairs", [])
     }
-    
-    for token in tokens:
-        
-        if token in COLOR_WORDS:
-            attributes["colors"].append(token)
-        if token in GARMENT_WORDS:
-            attributes["garments"].append(token)
-        if token in SCENE_WORDS:
-            attributes["scene"].append(token)
-        if token in OBJECT_WORDS:
-            attributes["objects"].append(token)
-        if token in STYLE_WORDS:
-            attributes["styles"].append(token)
-        if token in GENDER_MAP:
-            attributes["gender"].append(GENDER_MAP[token])
-            
-    # Extract dynamic color-garment pairs
-    for i in range(len(tokens)-1):
-        if tokens[i] in COLOR_WORDS and tokens[i+1] in GARMENT_WORDS:
-            attributes["color_garment_pairs"].append(f"{tokens[i]}:{tokens[i+1]}")
-            
-    return attributes
 
 def get_metadata_for_image(image_id: str) -> Dict:
     """

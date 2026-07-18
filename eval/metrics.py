@@ -2,9 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from fashion_retrieval.common import read_jsonl
-from fashion_retrieval.indexer.config import IndexConfig
-from fashion_retrieval.retriever.search import MultimodalRetriever
+from common import read_jsonl
+from retriever.search import MultimodalRetriever
 
 
 @dataclass
@@ -42,7 +41,7 @@ def evaluate_queries(
     queries: list[str],
     ground_truth_path,
     top_k: int = 5,
-    config: IndexConfig = IndexConfig(),
+    
 ) -> list[QueryMetric]:
     engine = MultimodalRetriever()
     truth = load_ground_truth(ground_truth_path)

@@ -6,13 +6,16 @@ import torch
 from PIL import Image
 from transformers import CLIPModel, CLIPProcessor
 
-from fashion_retrieval.common import iter_images, l2_normalize
-from fashion_retrieval.indexer.config import IndexConfig
-from fashion_retrieval.indexer.models import resolve_device
+from common import iter_images, l2_normalize
 
+
+def resolve_device(device: str = "auto") -> torch.device:
+    if device == "auto":
+        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    return torch.device(device)
 
 class ClipBaseline:
-    def __init__(self, model_name: str = IndexConfig.clip_model_name, device: str = "auto"):
+    def __init__(self, model_name: str = "openai/clip-vit-base-patch32", device: str = "auto"):
         self.device = resolve_device(device)
         self.processor = CLIPProcessor.from_pretrained(model_name)
         self.model = CLIPModel.from_pretrained(model_name).to(self.device)
@@ -38,7 +41,7 @@ class ClipBaseline:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("query")
-    parser.add_argument("--image-dir", default=str(IndexConfig.image_dir))
+    parser.add_argument("--image-dir", default=str("data/images"))
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--device", default="auto")
     args = parser.parse_args()
