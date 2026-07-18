@@ -1,0 +1,7 @@
+torch
+transformers
+faiss-cpu
+Pillow
+pandas
+numpy
+tqdm
