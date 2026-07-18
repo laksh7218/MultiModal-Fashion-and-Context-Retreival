@@ -21,4 +21,4 @@ Building an intelligent search engine that can retrieve specific  images from a 
                   ▼
              Final Ranking
 
-  Use pyhton -m streamlit run app.py to see the visuals
+
