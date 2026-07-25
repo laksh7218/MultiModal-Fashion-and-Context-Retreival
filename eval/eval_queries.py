@@ -20,8 +20,6 @@ def main() -> None:
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--device", default="auto")
     parser.add_argument("--ground-truth", default=None)
-    parser.add_argument("--use-itm", action="store_true")
-    parser.add_argument("--itm-pool", type=int, default=20)
     args = parser.parse_args()
 
     if args.ground_truth:
