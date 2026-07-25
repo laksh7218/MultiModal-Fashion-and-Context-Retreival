@@ -53,23 +53,19 @@ fashion_retrieval/
 ├── README.md                   # This file
 ├── common.py                   # Shared configurations
 ├── requirements.txt            # Python dependencies
-│   └── fix_metadata.py
 │
 ├── indexer/                    # Offline indexing pipeline
 │   ├── build_index.py          # Generates FAISS embeddings
-│   ├── attribute_extraction.py # Extracts structured metadata
-│   ├── models.py               # CLIP model definitions
-│   └── config.py               # Indexer configurations
+│   └── attribute_extraction.py # Extracts structured metadata
 │
 ├── retriever/                  # Online retrieval pipeline
 │   ├── search.py               # CLIP + FAISS semantic search logic
-│   ├── rerank.py               # Metadata-aware reranking and penalty logic
-│   └── query_parser.py         # Parses text queries into attributes
+│   └── rerank.py               # Metadata-aware reranking and penalty logic
 │
 ├── eval/                       # Quantitative evaluation scripts
 │   ├── eval_queries.py         # Main evaluation script
 │   ├── metrics.py              # Mathematical metric implementations (Recall@5, MRR)
-│   └── baseline_clip.py        # Vanilla CLIP baseline proof
+│   ├── baseline_clip.py        # Vanilla CLIP baseline proof
 │   └── hard_negative_test.py       
 │
 └── data/                       # Precomputed index and metadata
@@ -78,7 +74,7 @@ fashion_retrieval/
     └── clip_image_mapping.json
 ```
 
-##  Quickstart: Sequence of Execution
+## 🚀 Quickstart: Sequence of Execution
 To run this pipeline from scratch, follow this exact sequence of execution.
 
 ### Step 1: Install Dependencies
@@ -134,7 +130,7 @@ A deep analysis of the evaluation queries highlights both the strengths and the 
 * **Improving Metadata Extraction:** As demonstrated in the evaluation, the metadata-aware reranker is heavily bottlenecked by sparse metadata. The most critical future work is implementing a more robust automated metadata extraction pipeline (e.g., using Vision-Language Models) to ensure dense attribute coverage across all images.
 * **Location and Weather:** Extending the vocabulary and structured metadata to include bounding boxes for landmarks, or classifying weather conditions (rain, snow) to parse queries like *"formal outfit for a rainy day in London."*
 
-##  Running the FastAPI Demo
+## 🖥️ Running the FastAPI Demo
 
 We have built a fully functional web interface to test the retrieval system interactively!
 
@@ -143,7 +139,7 @@ uvicorn app:app --reload
 ```
 Then open `http://localhost:8000` in your browser. You can type natural language queries and see the retrieved images and their compositional scores in real-time.
 
-##  Architecture & Design Choices (Why not just cross-encoders?)
+## 🏗️ Architecture & Design Choices (Why not just cross-encoders?)
 
 **The Problem:** Vanilla CLIP acts as a "bag of words" and often fails at compositionality (e.g., confusing a "red shirt and blue pants" with a "blue shirt and red pants"). 
 **The Heavy Solution:** Cross-encoders (like SigLIP or BLIP-ITM) solve this, but they are computationally expensive at scale, requiring you to run a deep neural network on *every* candidate image for *every* query.
@@ -156,7 +152,7 @@ Instead of a bolt-on cross-encoder, this project uses a deterministic **Attribut
 
 *Note on Data Generation:* The metadata for the synthetic images was curated using LLMs. While we identified and patched some initial hallucinations where the generated labels disagreed with the source captions, the final metadata strictly aligns with the visual truth of the dataset.
 
-##  Systematic Hard-Negative Benchmark
+## 📊 Systematic Hard-Negative Benchmark
 
 To prove the efficacy of the Metadata-Aware Reranker, we built an honest, systematic hard-negative evaluation script (`eval/hard_negative_test.py`). 
 
