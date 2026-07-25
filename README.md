@@ -126,6 +126,17 @@ A deep analysis of the evaluation queries highlights both the strengths and the 
 | **"Blue shirt on park bench"** | $\checkmark$ | **Success:** Garment, color, scene, and object metadata matched exactly, heavily rewarding the correct color-garment binding. |
 | **"Casual city walk"** | $\sim$ | **Partial:** Style (casual) matched perfectly, but street/outdoor contextual cues were weakly represented in the upstream image metadata. |
 
+## Comparison 
+```
+| Query | Vanilla CLIP Recall@5 | Vanilla CLIP MRR | Hybrid Reranker Recall@5 | Hybrid Reranker MRR |
+| :--- | :---: | :---: | :---: | :---: |
+| Bright yellow raincoat | 0.833 | 1.000 | 0.833 | 1.000 |
+| Business attire inside a modern office | 0.615 | 1.000 | 0.615 | 1.000 |
+| Blue shirt sitting on a park bench | 0.750 | 0.500 | 0.750 | 1.000 |
+| Casual weekend outfit for a city walk | 0.500 | 1.000 | 0.500 | 1.000 |
+| Red tie and white shirt in a formal setting | 0.400 | 0.166 | 0.400 | 1.000 |
+| **Average** | **0.620** | **0.733** | **0.620** | **1.000** |
+```
 ## Future Work
 * **Improving Metadata Extraction:** As demonstrated in the evaluation, the metadata-aware reranker is heavily bottlenecked by sparse metadata. The most critical future work is implementing a more robust automated metadata extraction pipeline (e.g., using Vision-Language Models) to ensure dense attribute coverage across all images.
 * **Location and Weather:** Extending the vocabulary and structured metadata to include bounding boxes for landmarks, or classifying weather conditions (rain, snow) to parse queries like *"formal outfit for a rainy day in London."*
